@@ -1,15 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchCategories } from '../actions/index';
+import { fetchCategories, receiveCategories } from '../actions/index';
 
 class Main extends Component {
-  render() {
-    const { receiveCategories } = this.props
 
-    receiveCategories()
+  componentDidMount() {
+    this.props.receiveCategories()
+  }
+
+  render() {
+    const { categories } = this.props
+
+    console.log(categories)
 
     return (
-      <div>Hello World</div>
+      <div>
+        {categories.map(key => (
+          <div>{categories[key].name}</div>
+        ))}
+      </div>
     )
   }
 }

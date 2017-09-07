@@ -1,4 +1,4 @@
-import * as API from '../api/Api'
+import { URL, GET_HEADERS } from '../api/Api'
 
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 
@@ -7,7 +7,8 @@ export const receiveCategories = categories => ({
   categories,
 })
 
-export const fetchCategories = () => (/* dispatch*/) => {
-  console.log(API.getCategories())
-    // .then(categories => dispatch(receiveCategories(categories)))
+export const fetchCategories = () => (dispatch) => {
+  fetch(`${URL}/categories`, GET_HEADERS)
+    .then(res => res.json())
+    .then(data => dispatch(receiveCategories(data.categories)))
 }
