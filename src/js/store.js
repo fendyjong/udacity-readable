@@ -1,5 +1,8 @@
-import { createStore, compose, applyMiddleware } from 'redux';
-import root from './reducers/root';
-import thunk from 'redux-thunk';
+import { createStore, compose, applyMiddleware } from 'redux'
+import root from './reducers/root'
+import logger from 'redux-logger'
+import thunk from 'redux-thunk'
 
-export default compose(applyMiddleware(thunk))(createStore)(root);
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+export default compose(composeEnhancers(applyMiddleware(logger, thunk)))(createStore)(root)

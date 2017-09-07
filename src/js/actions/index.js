@@ -1,21 +1,13 @@
-// See https://github.com/acdlite/flux-standard-action
+import * as API from '../api/Api'
 
-// Session
-export const SESSION_LOAD = 'SESSION_LOAD';
-export const SESSION_LOGIN = 'SESSION_LOGIN';
-export const SESSION_LOGOUT = 'SESSION_LOGOUT';
+export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 
-// Dashboard
-export const DASHBOARD_LOAD = 'DASHBOARD_LOAD';
-export const DASHBOARD_UNLOAD = 'DASHBOARD_UNLOAD';
+export const receiveCategories = categories => ({
+  type: FETCH_CATEGORIES,
+  categories,
+})
 
-// Tasks
-export const TASKS_LOAD = 'TASKS_LOAD';
-export const TASKS_UNLOAD = 'TASKS_UNLOAD';
-export const TASK_LOAD = 'TASK_LOAD';
-export const TASK_UNLOAD = 'TASK_UNLOAD';
-
-// Nav
-export const NAV_ACTIVATE = 'NAV_ACTIVATE';
-export const NAV_ENABLE = 'NAV_ENABLE';
-export const NAV_RESPONSIVE = 'NAV_RESPONSIVE';
+export const fetchCategories = () => (/* dispatch*/) => {
+  console.log(API.getCategories())
+    // .then(categories => dispatch(receiveCategories(categories)))
+}
