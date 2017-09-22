@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
-import { FETCH_CATEGORIES, FETCH_POSTS } from '../actions/index'
+import { FETCH_CATEGORIES, FETCH_POST_DETAIL, FETCH_POSTS } from '../actions/index'
 
 const initialCategories = {
-  categories: [],
+  list: [],
 }
 
 function categories(state = initialCategories, action) {
@@ -10,21 +10,38 @@ function categories(state = initialCategories, action) {
     case FETCH_CATEGORIES:
       return {
         ...state,
-        ...action.categories,
-      };
+        list: [...action.categories],
+      }
     default:
       return state
   }
 }
 
-const initialPosts = {}
+const initialPosts = {
+  list: [],
+  post: {
+    id: '',
+    timestamp: '',
+    title: '',
+    body: '',
+    author: '',
+    category: '',
+    voteScore: '',
+    deleted: false,
+  },
+}
 
 function posts(state = initialPosts, action) {
   switch (action.type) {
     case FETCH_POSTS:
       return {
         ...state,
-        ...action.posts.sort((a, b) => a.voteScore < b.voteScore),
+        list: [...action.posts.sort((a, b) => a.voteScore < b.voteScore)],
+      }
+    case FETCH_POST_DETAIL:
+      return {
+        ...state,
+        post: { ...action.post },
       }
     default:
       return state

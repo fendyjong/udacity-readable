@@ -29,7 +29,6 @@ class Posts extends Component {
   }
 
   _receivePosts(category) {
-    console.log(category)
     const { receivePosts } = this.props
 
     if (category !== 'all') {
@@ -41,8 +40,9 @@ class Posts extends Component {
 
   _onSelect(index) {
     const { posts } = this.props
-    console.log(posts)
-    console.log(Object.values(posts)[index])
+
+    const post = posts.list[index]
+    this.props.history.push(`/post/${post.id}`)
   }
 
   render() {
@@ -67,7 +67,7 @@ class Posts extends Component {
             </tr>
           </thead>
           <tbody>
-            {!posts || Object.values(posts).map(post => (
+            {posts.list.map(post => (
               <TableRow key={shortid.generate()}>
                 <td><Moment format='DD MMM YYYY'>{post.timestamp}</Moment></td>
                 <td>{post.title}</td>

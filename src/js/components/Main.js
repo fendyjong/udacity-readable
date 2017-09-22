@@ -5,6 +5,9 @@ import { fetchCategories } from '../actions/index'
 
 import shortid from 'shortid'
 
+import Posts from './Posts'
+import PostDetail from './PostDetail'
+
 import Split from 'grommet/components/Split'
 import Sidebar from 'grommet/components/Sidebar'
 import Header from 'grommet/components/Header'
@@ -13,8 +16,6 @@ import Box from 'grommet/components/Box'
 import Menu from 'grommet/components/Menu'
 import Anchor from 'grommet/components/Anchor'
 import Footer from 'grommet/components/Footer'
-
-import Posts from './Posts'
 
 class Main extends Component {
   componentDidMount() {
@@ -37,13 +38,13 @@ class Main extends Component {
                  justify='start'>
               <Menu primary={true}>
                 <Anchor key={shortid.generate()}
-                        path='/all/posts'>
+                        path='/posts/all'>
                   all
                 </Anchor>
-                {!categories || Object.keys(categories).map(key => (
+                {categories.list.map(category => (
                   <Anchor key={shortid.generate()}
-                          path={`/${categories[key].path}/posts`}>
-                    {categories[key].name}
+                          path={`/posts/${category.path}`}>
+                    {category.name}
                   </Anchor>
                 ))}
               </Menu>
@@ -54,8 +55,9 @@ class Main extends Component {
           </Sidebar>
           <Box>
             <Switch>
-              <Redirect exact from='/' to='/all/posts' />
-              <Route path='/:category/posts' component={Posts} />
+              <Redirect exact from='/' to='/posts/all' />
+              <Route path='/posts/:category' component={Posts} />
+              <Route path='/post/:key' component={PostDetail} />
             </Switch>
           </Box>
         </Split>
