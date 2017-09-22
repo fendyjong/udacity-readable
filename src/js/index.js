@@ -3,7 +3,6 @@ import { polyfill as promisePolyfill } from 'es6-promise'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import store from './store'
@@ -16,9 +15,7 @@ promisePolyfill()
 const element = document.getElementById('content')
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
-      <Main />
-    </BrowserRouter>
+    <Main />
   </Provider>,
   element,
 )

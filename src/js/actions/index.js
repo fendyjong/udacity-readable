@@ -29,6 +29,7 @@ export const receivePosts = posts => ({
 })
 
 export const fetchPosts = (category = '') => (dispatch) => {
+  console.log(`${URL}${category !== '' ? `/${category}` : ''}/posts`)
   fetch(`${URL}${category !== '' ? `/${category}` : ''}/posts`, GET_HEADERS)
     .then(res => res.json())
     .then(data => dispatch(receivePosts(data)))

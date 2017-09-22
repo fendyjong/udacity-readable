@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Switch, Route, Redirect, BrowserRouter as Router } from 'react-router-dom'
 import { fetchCategories } from '../actions/index'
 
 import shortid from 'shortid'
@@ -25,37 +25,41 @@ class Main extends Component {
     const { categories } = this.props
 
     return (
-      <Split flex='right'>
-        <Sidebar colorIndex='brand'
-                 size='small'>
-          <Header pad='medium'
-                  justify='between'>
-            <Title>
-              Udacity Readable
-            </Title>
-          </Header>
-          <Box flex='grow'
-               justify='start'>
-            <Menu primary={true}>
-              {!categories || categories.categories.map(category => (
+      <Router>
+        <Split flex='right'>
+          <Sidebar colorIndex='brand'
+                   size='small'>
+            <Header pad='medium'
+                    justify='between'>
+              <Title>Udacity Readable</Title>
+            </Header>
+            <Box flex='grow'
+                 justify='start'>
+              <Menu primary={true}>
                 <Anchor key={shortid.generate()}
-                        path={`/${category.path}/posts`}>
-                  {category.name}
+                        path='/all/posts'>
+                  all
                 </Anchor>
-              ))}
-            </Menu>
+                {!categories || Object.keys(categories).map(key => (
+                  <Anchor key={shortid.generate()}
+                          path={`/${categories[key].path}/posts`}>
+                    {categories[key].name}
+                  </Anchor>
+                ))}
+              </Menu>
+            </Box>
+            <Footer pad='medium'>
+              &copy; 2017 zeven.io
+            </Footer>
+          </Sidebar>
+          <Box>
+            <Switch>
+              <Redirect exact from='/' to='/all/posts' />
+              <Route path='/:category/posts' component={Posts} />
+            </Switch>
           </Box>
-          <Footer pad='medium'>
-            &copy; 2017 zeven.io
-          </Footer>
-        </Sidebar>
-        <Box>
-          <Switch>
-            <Redirect from='/' to='/all/posts' />
-            <Route path='/:category/posts' component={Posts} />
-          </Switch>
-        </Box>
-      </Split>
+        </Split>
+      </Router>
     )
   }
 }

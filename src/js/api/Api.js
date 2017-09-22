@@ -1,4 +1,4 @@
-export const URL = 'http://localhost:5001'
+export const URL = 'http://localhost:3001'
 const headers = {
   'Content-Type': 'application/json',
   'Authorization': 'fendy.jong',
@@ -17,8 +17,11 @@ const POST_HEADERS = {
 export const getCategories = () => {
   console.log(GET_HEADERS)
   fetch(`${URL}/categories`, GET_HEADERS)
-    .then(res => res.json())
-    .then(data => console.log(data))
+    .then((res) => {
+      res.json().then((data) => {
+        console.log(data)
+      })
+    })
 }
 
 export const addCategories = () => {

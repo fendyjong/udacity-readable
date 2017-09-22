@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import shortid from 'shortid'
 
 import Moment from 'react-moment'
 
@@ -14,19 +15,34 @@ import { fetchPosts } from '../actions/index'
 
 class Posts extends Component {
   componentDidMount() {
-    const { match, receivePosts } = this.props
-console.log(this.props.match.params.category)
-    if (!match.params.category) {
-      console.log(match.params.category)
-      receivePosts(match.params.category)
+    const { match: { params } } = this.props
+
+    this._receivePosts(params.category)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { location, match: { params } } = nextProps
+
+    if (location !== this.props.location) {
+      this._receivePosts(params.category)
+    }
+  }
+
+  _receivePosts(category) {
+    console.log(category)
+    const { receivePosts } = this.props
+
+    if (category !== 'all') {
+      receivePosts(category)
     } else {
-      console.log('No')
       receivePosts()
     }
   }
 
   _onSelect(index) {
-    console.log(this.props.posts.posts[index])
+    const { posts } = this.props
+    console.log(posts)
+    console.log(Object.values(posts)[index])
   }
 
   render() {
@@ -51,8 +67,8 @@ console.log(this.props.match.params.category)
             </tr>
           </thead>
           <tbody>
-            {!posts || posts.posts.map(post => (
-              <TableRow key={post.id}>
+            {!posts || Object.values(posts).map(post => (
+              <TableRow key={shortid.generate()}>
                 <td><Moment format='DD MMM YYYY'>{post.timestamp}</Moment></td>
                 <td>{post.title}</td>
                 <td>{post.author}</td>
@@ -74,7 +90,7 @@ function mapStateToProps({ posts }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    receivePosts: () => dispatch(fetchPosts()),
+    receivePosts: category => dispatch(fetchPosts(category)),
   }
 }
 

@@ -49,7 +49,8 @@
     "no-alert": 0,
     "global-require": 0,
     "quote-props": 0,
-    "indent": 0
+    "indent": 0,
+    "no-trailing-spaces": 0
     /*
     "no-use-before-define": 0,
     "no-tabs": 0,

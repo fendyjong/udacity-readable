@@ -10,23 +10,21 @@ function categories(state = initialCategories, action) {
     case FETCH_CATEGORIES:
       return {
         ...state,
-        categories: [...action.categories],
+        ...action.categories,
       };
     default:
       return state
   }
 }
 
-const initialPosts = {
-  posts: [],
-}
+const initialPosts = {}
 
 function posts(state = initialPosts, action) {
   switch (action.type) {
     case FETCH_POSTS:
       return {
         ...state,
-        posts: action.posts.sort((a, b) => a.voteScore < b.voteScore),
+        ...action.posts.sort((a, b) => a.voteScore < b.voteScore),
       }
     default:
       return state
