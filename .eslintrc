@@ -26,6 +26,7 @@
     "react/jsx-boolean-value": 0,
     "react/jsx-first-prop-new-line": 0,
     "react/jsx-closing-bracket-location": 0,
+    "react/jsx-indent": 0,
     "react/jsx-indent-props": 0,
     "react/no-multi-comp": 0,
     "react/prefer-stateless-function": 0,
@@ -52,10 +53,13 @@
     "indent": 0,
     "no-trailing-spaces": 0,
     "no-shadow": 0,
-    "max-len": 0
+    "max-len": 0,
+    "no-tabs": 0,
+    "arrow-parens": "off",
+    "no-mixed-spaces-and-tabs": "off"
+
     /*
     "no-use-before-define": 0,
-    "no-tabs": 0,
     "comma-dangle": 0,
     "object-property-newline": 0
     */
