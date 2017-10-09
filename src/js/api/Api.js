@@ -84,13 +84,13 @@ class Api {
 			.then(res => res.json() || [])
 	}
 
-	newComment(body, author, postId) {
+	newComment(body, author, parentId) {
 		const option = this._generateOption('POST', {
 			id: shortid.generate(),
 			timestamp: Date.now(),
 			body,
 			author,
-			postId,
+			parentId,
 		})
 		return fetch(`${this.URL}/comments`, option)
 			.then(res => res.json())
@@ -101,8 +101,10 @@ class Api {
 			.then(res => res.json())
 	}
 
-	voteComment(key) {
-		const option = this._generateOption('POST')
+	voteComment(key, vote) {
+		const option = this._generateOption('POST', {
+			option: vote,
+		})
 		return fetch(`${this.URL}/comments/${key}`, option)
 			.then(res => res.json())
 	}

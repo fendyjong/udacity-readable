@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 
 import moment from 'moment'
 
-import { fetchPostComments, newComment } from '../actions/index'
+import { fetchPostComments, newComment, voteComment } from '../actions/index'
+import Vote from './Vote'
 
 import Box from 'grommet/components/Box'
 import Heading from 'grommet/components/Heading'
@@ -35,8 +36,12 @@ class PostComments extends Component {
 		this._handleOnSubmit = this._handleOnSubmit.bind(this)
 	}
 
-	componentWillMount() {
-		this.props.fetchPostComments()
+	componentWillReceiveProps(nextProps) {
+		const { post } = nextProps
+
+		if (this.props.post.id !== post.id) {
+			this.props.fetchPostComments(post.id)
+		}
 	}
 
 	_handleOnChange(event) {
@@ -61,18 +66,21 @@ class PostComments extends Component {
 	}
 
 	render() {
-		const { comments } = this.props
+		const { comments, voteComment } = this.props
 		const { form } = this.state
 
 		return (
 			<Box margin='medium' pad='medium'>
 				<List>
-					{comments.map(comment => (
-						<ListItem key={comment.id}
+					{Object.keys(comments).map(key => (
+						<ListItem key={comments[key].id}
 						          pad={{ horizontal: 'medium' }}>
 							<Box pad='none'>
-								<Markdown content={comment.body} />
-								<Label>{`By: ${comment.author} - ${moment(comment.timestamp).format('DD MMM YYYY')}`}</Label>
+								<Markdown content={comments[key].body} />
+								<Label>{`By: ${comments[key].author} - ${moment(comments[key].timestamp).format('DD MMM YYYY')}`}</Label>
+								<Vote voteScore={comments[key].voteScore}
+								      upVote={() => voteComment(comments[key].id, 'upVote')}
+								      downVote={() => voteComment(comments[key].id, 'downVote')} />
 							</Box>
 						</ListItem>
 					))}
@@ -112,6 +120,7 @@ const mapStateToProps = ({ posts: { post, comments } }) => ({
 const mapDispatchToProps = dispatch => ({
 	fetchPostComments: key => dispatch(fetchPostComments(key)),
 	newComment: (comment, author, postId) => dispatch(newComment(comment, author, postId)),
+	voteComment: (key, vote) => dispatch(voteComment(key, vote)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostComments)

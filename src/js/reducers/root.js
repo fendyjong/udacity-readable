@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux'
 import {
-	FETCH_CATEGORIES, FETCH_POST_COMMENTS, FETCH_POST_DETAIL, FETCH_POSTS, POST_COMMENT,
-	VOTE_POST,
+	FETCH_CATEGORIES,
+	POST_SORT_LIST,
+	FETCH_POST_DETAIL, FETCH_POSTS, VOTE_POST, SUBMIT_POST,
+	FETCH_POST_COMMENTS, POST_COMMENT, VOTE_COMMENT,
 } from '../actions/index'
 
 const initialCategories = {
@@ -21,6 +23,8 @@ function categories(state = initialCategories, action) {
 }
 
 const initialPosts = {
+	sortAscending: true,
+	sortIndex: 3,
 	list: [],
 	post: {
 		id: '',
@@ -36,13 +40,55 @@ const initialPosts = {
 }
 
 function posts(state = initialPosts, action) {
+	let comments = [...state.comments]
+
 	switch (action.type) {
+		case POST_SORT_LIST:
+			let list
+			const sortAscending = !state.sortAscending
+			switch (action.sortIndex) {
+				case 0:
+					if (sortAscending) {
+						list = [...state.list.sort((a, b) => a.timestamp < b.timeStamp)]
+					} else {
+						list = [...state.list.sort((a, b) => a.timestamp > b.timeStamp)]
+					}
+					break
+				case 1:
+					if (sortAscending) {
+						list = [...state.list.sort((a, b) => a.title < b.title)]
+					} else {
+						list = [...state.list.sort((a, b) => a.title > b.title)]
+					}
+					break
+				case 2:
+					if (sortAscending) {
+						list = [...state.list.sort((a, b) => a.author < b.author)]
+					} else {
+						list = [...state.list.sort((a, b) => a.author > b.author)]
+					}
+					break
+				default:
+					if (sortAscending) {
+						list = [...state.list.sort((a, b) => a.voteScore < b.voteScore)]
+					} else {
+						list = [...state.list.sort((a, b) => a.voteScore > b.voteScore)]
+					}
+			}
+
+			return {
+				...state,
+				sortIndex: action.sortIndex,
+				sortAscending,
+				list,
+			}
 		case FETCH_POSTS:
 			return {
 				...state,
 				list: [...action.posts.sort((a, b) => a.voteScore < b.voteScore)],
 			}
 		case FETCH_POST_DETAIL:
+		case SUBMIT_POST:
 		case VOTE_POST:
 			return {
 				...state,
@@ -54,13 +100,25 @@ function posts(state = initialPosts, action) {
 				comments: [...action.comments],
 			}
 		case POST_COMMENT:
-			const comments = [...state.comments]
 			comments.push(action.comment)
 
 			return {
 				...state,
 				comments,
-				comment: { ...action.comment },
+				// comment: { ...action.comment },
+			}
+		case VOTE_COMMENT:
+			// TODO change vote score in comment
+			comments = comments.map(z => {
+				if (z.id === action.comment.id) {
+					return action.comment
+				}
+				return z
+			})
+
+			return {
+				...state,
+				comments,
 			}
 		default:
 			return state

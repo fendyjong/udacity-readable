@@ -4,94 +4,103 @@ import shortid from 'shortid'
 
 import Moment from 'react-moment'
 
+import { fetchPosts, postSortList } from '../actions/index'
+
 import Article from 'grommet/components/Article'
 import Header from 'grommet/components/Header'
 import Box from 'grommet/components/Box'
 import Title from 'grommet/components/Title'
 import Table from 'grommet/components/Table'
 import TableRow from 'grommet/components/TableRow'
+import TableHeader from 'grommet/components/TableHeader'
+import Button from 'grommet/components/Button'
 
-import { fetchPosts } from '../actions/index'
+import AddIcon from 'grommet/components/icons/base/Add'
 
 class Posts extends Component {
-  componentDidMount() {
-    const { match: { params } } = this.props
 
-    this._receivePosts(params.category)
-  }
+	componentDidMount() {
+		const { match: { params } } = this.props
 
-  componentWillReceiveProps(nextProps) {
-    const { location, match: { params } } = nextProps
+		this._receivePosts(params.category)
+	}
 
-    if (location !== this.props.location) {
-      this._receivePosts(params.category)
-    }
-  }
+	componentWillReceiveProps(nextProps) {
+		const { location, match: { params } } = nextProps
 
-  _receivePosts(category) {
-    const { receivePosts } = this.props
+		if (location !== this.props.location) {
+			this._receivePosts(params.category)
+		}
+	}
 
-    if (category !== 'all') {
-      receivePosts(category)
-    } else {
-      receivePosts()
-    }
-  }
+	_receivePosts(category) {
+		const { receivePosts } = this.props
 
-  _onSelect(index) {
-    const { posts } = this.props
+		if (category !== 'all') {
+			receivePosts(category)
+		} else {
+			receivePosts()
+		}
+	}
 
-    const post = posts.list[index]
-    this.props.history.push(`/post/${post.id}`)
-  }
+	_onSelect(postId) {
+		const { posts } = this.props
 
-  render() {
-    const { posts } = this.props
+		// const post = posts.list[index]
+		this.props.history.push(`/post/${postId}`)
+	}
 
-    return (
-      <Article>
-        <Header colorIndex='neutral-3'>
-          <Box pad={{ 'horizontal': 'medium' }}>
-            <Title>Posts</Title>
-          </Box>
-        </Header>
-        <Table selectable={true}
-               onSelect={index => this._onSelect(index)}
-               className='table-style'>
-          <thead>
-            <tr>
-              <td>Date</td>
-              <td>Title</td>
-              <td>Author</td>
-              <td>Vote</td>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.list.map(post => (
-              <TableRow key={shortid.generate()}>
-                <td><Moment format='DD MMM YYYY'>{post.timestamp}</Moment></td>
-                <td>{post.title}</td>
-                <td>{post.author}</td>
-                <td>{post.voteScore}</td>
-              </TableRow>
-            ))}
-          </tbody>
-        </Table>
-      </Article>
-    )
-  }
+	render() {
+		const { list, sortAscending, sortIndex, postSortList } = this.props
+
+		return (
+			<Article>
+				<Header colorIndex='neutral-3'>
+					<Box pad={{ horizontal: 'medium' }}
+					     direction='row'
+					     justify='between'
+					     flex={true}>
+						<Title>Posts</Title>
+						<Button icon={<AddIcon />}
+						        path='/post/form' />
+					</Box>
+				</Header>
+				<Table selectable={true}
+				       className='table-style'>
+					<TableHeader labels={['Date', 'Title', 'Author', 'Vote']}
+					             sortIndex={sortIndex}
+					             sortAscending={sortAscending}
+					             onSort={index => postSortList(index)} />
+					<tbody>
+						{list.map(post => (
+							<TableRow key={shortid.generate()}
+							          onClick={() => this._onSelect(post.id)}>
+								<td><Moment format='DD MMM YYYY'>{post.timestamp}</Moment></td>
+								<td>{post.title}</td>
+								<td>{post.author}</td>
+								<td>{post.voteScore}</td>
+							</TableRow>
+						))}
+					</tbody>
+				</Table>
+			</Article>
+		)
+	}
 }
 
-function mapStateToProps({ posts }) {
-  return {
-    posts,
-  }
+function mapStateToProps({ posts: { list, sortAscending, sortIndex } }) {
+	return {
+		list,
+		sortAscending,
+		sortIndex,
+	}
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    receivePosts: category => dispatch(fetchPosts(category)),
-  }
+	return {
+		receivePosts: category => dispatch(fetchPosts(category)),
+		postSortList: sortIndex => dispatch(postSortList(sortIndex)),
+	}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Posts)
