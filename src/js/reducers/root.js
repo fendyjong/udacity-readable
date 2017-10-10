@@ -3,25 +3,42 @@ import {
 	FETCH_CATEGORIES,
 	POST_SORT_LIST,
 	FETCH_POST_DETAIL, FETCH_POSTS, VOTE_POST, SUBMIT_POST,
-	FETCH_POST_COMMENTS, SUBMIT_COMMENT, VOTE_COMMENT,
+	FETCH_POST_COMMENTS, SUBMIT_COMMENT, VOTE_COMMENT, SORT_COMMENTS,
 } from '../actions/index'
 
+/**
+ * Initial state of categories redux state
+ *
+ * @type {{list: Array}}
+ */
 const initialCategories = {
 	list: [],
 }
 
+/**
+ * Categories redux state
+ *
+ * @param state
+ * @param action
+ * @returns {*}
+ */
 function categories(state = initialCategories, action) {
 	switch (action.type) {
 		case FETCH_CATEGORIES:
 			return {
 				...state,
-				list: [...action.categories],
+				...action.categories,
 			}
 		default:
 			return state
 	}
 }
 
+/**
+ * Initial state of post redux state
+ *
+ * @type {{sortAscending: boolean, sortIndex: number, list: Array, post: {id: string, timestamp: string, title: string, body: string, author: string, category: string, voteScore: string, deleted: boolean}, comments: Array}}
+ */
 const initialPosts = {
 	sortAscending: true,
 	sortIndex: 3,
@@ -39,6 +56,13 @@ const initialPosts = {
 	comments: [],
 }
 
+/**
+ * Posts redux state
+ *
+ * @param state
+ * @param action
+ * @returns {*}
+ */
 function posts(state = initialPosts, action) {
 	let comments = [...state.comments]
 
@@ -48,6 +72,7 @@ function posts(state = initialPosts, action) {
 			const sortAscending = !state.sortAscending
 			switch (action.sortIndex) {
 				case 0:
+					// Date
 					if (sortAscending) {
 						list = [...state.list.sort((a, b) => a.timestamp < b.timeStamp)]
 					} else {
@@ -55,6 +80,7 @@ function posts(state = initialPosts, action) {
 					}
 					break
 				case 1:
+					// Title
 					if (sortAscending) {
 						list = [...state.list.sort((a, b) => a.title < b.title)]
 					} else {
@@ -62,6 +88,7 @@ function posts(state = initialPosts, action) {
 					}
 					break
 				case 2:
+					// Author
 					if (sortAscending) {
 						list = [...state.list.sort((a, b) => a.author < b.author)]
 					} else {
@@ -69,6 +96,7 @@ function posts(state = initialPosts, action) {
 					}
 					break
 				default:
+					// Vote
 					if (sortAscending) {
 						list = [...state.list.sort((a, b) => a.voteScore < b.voteScore)]
 					} else {
@@ -83,9 +111,11 @@ function posts(state = initialPosts, action) {
 				list,
 			}
 		case FETCH_POSTS:
+			const posts = [...action.posts.filter(z => !z.deleted)]
+
 			return {
 				...state,
-				list: [...action.posts.sort((a, b) => a.voteScore < b.voteScore)],
+				list: [...posts.sort((a, b) => a.voteScore < b.voteScore)],
 			}
 		case FETCH_POST_DETAIL:
 		case SUBMIT_POST:
@@ -95,9 +125,12 @@ function posts(state = initialPosts, action) {
 				post: { ...action.post },
 			}
 		case FETCH_POST_COMMENTS:
+			comments = [...action.comments]
+			comments = comments.sort((a, b) => a.voteScore < b.voteScore)
+
 			return {
 				...state,
-				comments: [...action.comments],
+				comments: [...comments],
 			}
 		case SUBMIT_COMMENT:
 			if (comments.filter(z => z.id === action.comment.id).length > 0) {
@@ -114,7 +147,6 @@ function posts(state = initialPosts, action) {
 			return {
 				...state,
 				comments,
-				// comment: { ...action.comment },
 			}
 		case VOTE_COMMENT:
 			// TODO change vote score in comment
@@ -124,6 +156,33 @@ function posts(state = initialPosts, action) {
 				}
 				return z
 			})
+
+			return {
+				...state,
+				comments,
+			}
+		case SORT_COMMENTS:
+			const sort = action.sort
+
+			switch (sort.value) {
+				case 'Date':
+					switch (sort.direction) {
+						case 'desc':
+							comments = comments.sort((a, b) => a.timestamp > b.timestamp)
+							break
+						default:
+							comments = comments.sort((a, b) => a.timestamp < b.timestamp)
+					}
+					break
+				default:
+					switch (sort.direction) {
+						case 'desc':
+							comments = comments.sort((a, b) => a.voteScore > b.voteScore)
+							break
+						default:
+							comments = comments.sort((a, b) => a.voteScore < b.voteScore)
+					}
+			}
 
 			return {
 				...state,

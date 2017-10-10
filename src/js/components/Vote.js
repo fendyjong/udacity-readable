@@ -7,6 +7,11 @@ import Value from 'grommet/components/Value'
 import DislikeIcon from 'grommet/components/icons/base/Dislike'
 import LikeIcon from 'grommet/components/icons/base/Like'
 
+/**
+ * Re-usable vote component
+ *
+ * Used in post and comment
+ */
 class Vote extends Component {
 	render() {
 		const { upVote, downVote, voteScore } = this.props

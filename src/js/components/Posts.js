@@ -17,14 +17,24 @@ import Button from 'grommet/components/Button'
 
 import AddIcon from 'grommet/components/icons/base/Add'
 
+/**
+ * Posts list component
+ */
 class Posts extends Component {
-
+	/**
+	 * Get posts list by category
+	 */
 	componentDidMount() {
 		const { match: { params } } = this.props
 
 		this._receivePosts(params.category)
 	}
 
+	/**
+	 * Get posts list by category
+	 *
+	 * @param nextProps
+	 */
 	componentWillReceiveProps(nextProps) {
 		const { location, match: { params } } = nextProps
 
@@ -33,6 +43,12 @@ class Posts extends Component {
 		}
 	}
 
+	/**
+	 * Get posts list by category
+	 *
+	 * @param category
+	 * @private
+	 */
 	_receivePosts(category) {
 		const { receivePosts } = this.props
 
@@ -43,10 +59,13 @@ class Posts extends Component {
 		}
 	}
 
+	/**
+	 * Select post by postId
+	 *
+	 * @param postId
+	 * @private
+	 */
 	_onSelect(postId) {
-		const { posts } = this.props
-
-		// const post = posts.list[index]
 		this.props.history.push(`/post/${postId}`)
 	}
 
@@ -88,19 +107,15 @@ class Posts extends Component {
 	}
 }
 
-function mapStateToProps({ posts: { list, sortAscending, sortIndex } }) {
-	return {
-		list,
-		sortAscending,
-		sortIndex,
-	}
-}
+const mapStateToProps = ({ posts: { list, sortAscending, sortIndex } }) => ({
+	list,
+	sortAscending,
+	sortIndex,
+})
 
-function mapDispatchToProps(dispatch) {
-	return {
-		receivePosts: category => dispatch(fetchPosts(category)),
-		postSortList: sortIndex => dispatch(postSortList(sortIndex)),
-	}
-}
+const mapDispatchToProps = dispatch => ({
+	receivePosts: category => dispatch(fetchPosts(category)),
+	postSortList: sortIndex => dispatch(postSortList(sortIndex)),
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Posts)

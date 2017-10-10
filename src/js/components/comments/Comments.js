@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { fetchPostComments, submitComment } from '../../actions/index'
+import { submitComment } from '../../actions/index'
 import CommentList from './CommentList'
 
 import Box from 'grommet/components/Box'
@@ -13,12 +13,16 @@ import Header from 'grommet/components/Header'
 import Footer from 'grommet/components/Footer'
 import Button from 'grommet/components/Button'
 import TextInput from 'grommet/components/TextInput'
-import Select from 'grommet/components/Select'
 
+
+/**
+ * Main comments component
+ */
 class Comments extends Component {
 	constructor(props) {
 		super(props)
 
+		// initialize state
 		this.state = {
 			form: {
 				author: '',
@@ -31,14 +35,12 @@ class Comments extends Component {
 		this._handleOnSubmit = this._handleOnSubmit.bind(this)
 	}
 
-	componentWillReceiveProps(nextProps) {
-		const { post } = nextProps
-
-		if (this.props.post.id !== post.id) {
-			this.props.fetchPostComments(post.id)
-		}
-	}
-
+	/**
+	 * Handle on change form state
+	 *
+	 * @param event
+	 * @private
+	 */
 	_handleOnChange(event) {
 		const target = event.target
 		const name = target.name
@@ -52,12 +54,26 @@ class Comments extends Component {
 		})
 	}
 
+	/**
+	 * Handle submit form
+	 * Create new comment
+	 *
+	 * @param event
+	 * @private
+	 */
 	_handleOnSubmit(event) {
 		const { id } = this.props.post
 		const { author, comment } = this.state.form
 
 		event.preventDefault()
 		this.props.newComment(comment, author, id)
+
+		this.setState({
+			form: {
+				author: '',
+				comment: '',
+			},
+		})
 	}
 
 	render() {
@@ -68,13 +84,6 @@ class Comments extends Component {
 				<Header>
 					<Heading>Comments</Heading>
 				</Header>
-				<Box direction='row'
-				     align='center'
-				     pad={{ between: 'medium' }}
-				     margin={{ bottom: 'small' }}>
-					<span>Sort by:</span>
-					<Select options={['Date', 'Rate']} />
-				</Box>
 				<CommentList />
 				<Form>
 					<FormFields>
@@ -105,7 +114,6 @@ const mapStateToProps = ({ posts: { post } }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	fetchPostComments: key => dispatch(fetchPostComments(key)),
 	newComment: (comment, author, postId) => dispatch(submitComment(undefined, comment, author, postId)),
 })
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import Moment from 'react-moment'
 
-import { fetchPost, votePost } from '../actions'
+import { fetchPost, votePost, deletePost } from '../actions'
 import Comments from './comments/Comments'
 import Vote from './Vote'
 
@@ -15,34 +15,47 @@ import Heading from 'grommet/components/Heading'
 import Button from 'grommet/components/Button'
 
 import EditIcon from 'grommet/components/icons/base/Edit'
+import TrashIcon from 'grommet/components/icons/base/Trash'
 
+/**
+ * Post detail component
+ */
 class PostDetail extends Component {
+	/**
+	 * Fetch single post after component have mounted
+	 */
 	componentDidMount() {
 		const { match: { params } } = this.props
 
 		this._fetchPostDetail(params.key)
-		this._fetchComments(params.key)
 	}
 
+	/**
+	 * Get postId from url location then
+	 * Fetch single post
+	 *
+	 * @param nextProps
+	 */
 	componentWillReceiveProps(nextProps) {
 		const { location, match: { params } } = nextProps
 
 		if (location !== this.props.location) {
 			this._fetchPostDetail(params.key)
-			this._fetchComments(params.key)
 		}
 	}
 
+	/**
+	 * Fetch single post
+	 *
+	 * @param key
+	 * @private
+	 */
 	_fetchPostDetail(key) {
 		this.props.fetchPost(key)
 	}
 
-	_fetchComments(key) {
-		// TODO fetch comments
-	}
-
 	render() {
-		const { post: { id, timestamp, title, body, author, category, voteScore, deleted }, votePost } = this.props
+		const { post: { id, timestamp, title, body, author, category, voteScore }, votePost, deletePost } = this.props
 
 		return (
 			<div>
@@ -52,8 +65,13 @@ class PostDetail extends Component {
 					     justify='between'
 					     flex={true}>
 						<Title>Post: {`${title}`}</Title>
-						<Button icon={<EditIcon />}
-						        path={`/post/form/${id}`} />
+						<Box direction='row'>
+							<Button icon={<EditIcon />}
+							        path={`/post/form/${id}`} />
+							<Button icon={<TrashIcon />}
+							        path='/posts/all'
+							        onClick={() => deletePost(id)} />
+						</Box>
 					</Box>
 				</Header>
 				<Box margin='medium' pad='medium' colorIndex='light-2'>
@@ -72,17 +90,14 @@ class PostDetail extends Component {
 	}
 }
 
-function mapStateToProps({ posts: { post } }) {
-	return {
-		post,
-	}
-}
+const mapStateToProps = ({ posts: { post } }) => ({
+	post,
+})
 
-function mapDispatchToProps(dispatch) {
-	return {
-		fetchPost: key => dispatch(fetchPost(key)),
-		votePost: (key, vote) => dispatch(votePost(key, vote)),
-	}
-}
+const mapDispatchToProps = dispatch => ({
+	fetchPost: key => dispatch(fetchPost(key)),
+	votePost: (key, vote) => dispatch(votePost(key, vote)),
+	deletePost: postId => dispatch(deletePost(postId)),
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostDetail)

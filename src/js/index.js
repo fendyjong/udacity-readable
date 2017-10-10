@@ -14,10 +14,10 @@ promisePolyfill()
 
 const element = document.getElementById('content')
 ReactDOM.render(
-  <Provider store={store}>
-    <Main />
-  </Provider>,
-  element,
+	<Provider store={store}>
+		<Main />
+	</Provider>,
+	element,
 )
 
 document.body.classList.remove('loading')

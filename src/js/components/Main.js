@@ -18,7 +18,13 @@ import Menu from 'grommet/components/Menu'
 import Anchor from 'grommet/components/Anchor'
 import Footer from 'grommet/components/Footer'
 
+/**
+ * Main component
+ */
 class Main extends Component {
+	/**
+	 * Fetch categories
+	 */
 	componentDidMount() {
 		this.props.receiveCategories()
 	}
@@ -42,7 +48,7 @@ class Main extends Component {
 								        path='/posts/all'>
 									all
 								</Anchor>
-								{categories.list.map(category => (
+								{Object.values(categories).map(category => (
 									<Anchor key={shortid.generate()}
 									        path={`/posts/${category.path}`}>
 										{category.name}
@@ -57,7 +63,7 @@ class Main extends Component {
 					<Box>
 						<Switch>
 							<Redirect exact from='/' to='/posts/all' />
-							<Route path='/post/form/:postId?' component={PostForm} />
+							<Route path='/post/form' component={PostForm} />
 							<Route path='/posts/:category' component={Posts} />
 							<Route path='/post/:key' component={PostDetail} />
 						</Switch>
@@ -68,16 +74,12 @@ class Main extends Component {
 	}
 }
 
-function mapStateToProps({ categories }) {
-	return {
-		categories,
-	}
-}
+const mapStateToProps = ({ categories }) => ({
+	categories,
+})
 
-function mapDispatchToProps(dispatch) {
-	return {
-		receiveCategories: () => dispatch(fetchCategories()),
-	}
-}
+const mapDispatchToProps = dispatch => ({
+	receiveCategories: () => dispatch(fetchCategories()),
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
