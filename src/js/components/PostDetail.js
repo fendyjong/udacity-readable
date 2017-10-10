@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Moment from 'react-moment'
 
 import { fetchPost, votePost } from '../actions'
-import PostComments from './PostComments'
+import Comments from './comments/Comments'
 import Vote from './Vote'
 
 import Header from 'grommet/components/Header'
@@ -17,7 +17,6 @@ import Button from 'grommet/components/Button'
 import EditIcon from 'grommet/components/icons/base/Edit'
 
 class PostDetail extends Component {
-
 	componentDidMount() {
 		const { match: { params } } = this.props
 
@@ -67,7 +66,7 @@ class PostDetail extends Component {
 					      upVote={() => votePost(id, 'upVote')}
 					      downVote={() => votePost(id, 'downVote')} />
 				</Box>
-				<PostComments />
+				<Comments />
 			</div>
 		)
 	}

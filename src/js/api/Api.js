@@ -52,74 +52,74 @@ class Api {
 			.then(res => res.json())
 	}
 
-	fetchPostDetail(key) {
-		return fetch(`${this.URL}/posts/${key}`, this._generateOption('GET'))
+	fetchPostDetail(postId) {
+		return fetch(`${this.URL}/posts/${postId}`, this._generateOption('GET'))
 			.then(res => res.json())
 	}
 
-	votePost(key, vote) {
+	votePost(postId, vote) {
 		const option = this._generateOption('POST', {
 			option: vote,
 		})
-		return fetch(`${this.URL}/posts/${key}`, option)
+		return fetch(`${this.URL}/posts/${postId}`, option)
 			.then(res => res.json())
 	}
 
-	editPost(key, title, body) {
+	editPost(postId, title, body) {
 		const option = this._generateOption('PUT', {
 			title,
 			body,
 		})
-		return fetch(`${this.URL}/posts/${key}`, option)
+		return fetch(`${this.URL}/posts/${postId}`, option)
 			.then(res => res.json())
 	}
 
-	deletePost(key) {
-		return fetch(`${this.URL}/posts/${key}`, this._generateOption('DELETE'))
+	deletePost(postId) {
+		return fetch(`${this.URL}/posts/${postId}`, this._generateOption('DELETE'))
 			.then(res => res.json())
 	}
 
-	fetchPostComments(key) {
-		return fetch(`${this.URL}/posts/${key}/comments`, this._generateOption('GET'))
+	fetchPostComments(postId) {
+		return fetch(`${this.URL}/posts/${postId}/comments`, this._generateOption('GET'))
 			.then(res => res.json() || [])
 	}
 
-	newComment(body, author, parentId) {
+	newComment(body, author, postId) {
 		const option = this._generateOption('POST', {
 			id: shortid.generate(),
 			timestamp: Date.now(),
 			body,
 			author,
-			parentId,
+			parentId: postId,
 		})
 		return fetch(`${this.URL}/comments`, option)
 			.then(res => res.json())
 	}
 
-	fetchCommentDetail(key) {
-		return fetch(`${this.URL}/comments/${key}`, this._generateOption('GET'))
+	fetchCommentDetail(commentId) {
+		return fetch(`${this.URL}/comments/${commentId}`, this._generateOption('GET'))
 			.then(res => res.json())
 	}
 
-	voteComment(key, vote) {
+	voteComment(commentId, vote) {
 		const option = this._generateOption('POST', {
 			option: vote,
 		})
-		return fetch(`${this.URL}/comments/${key}`, option)
+		return fetch(`${this.URL}/comments/${commentId}`, option)
 			.then(res => res.json())
 	}
 
-	editComment(key, body) {
+	editComment(commentId, body) {
 		const option = this._generateOption('PUT', {
 			timestamp: Date.now(),
 			body,
 		})
-		return fetch(`${this.URL}/comments/${key}`, option)
+		return fetch(`${this.URL}/comments/${commentId}`, option)
 			.then(res => res.json())
 	}
 
-	deleteComment(key) {
-		return fetch(`${this.URL}/comments/${key}`, this._generateOption('DELETE'))
+	deleteComment(commentId) {
+		return fetch(`${this.URL}/comments/${commentId}`, this._generateOption('DELETE'))
 			.then(res => res.json())
 	}
 }

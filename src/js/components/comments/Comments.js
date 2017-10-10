@@ -1,27 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import moment from 'moment'
-
-import { fetchPostComments, newComment, voteComment } from '../actions/index'
-import Vote from './Vote'
+import { fetchPostComments, submitComment } from '../../actions/index'
+import CommentList from './CommentList'
 
 import Box from 'grommet/components/Box'
 import Heading from 'grommet/components/Heading'
 import Form from 'grommet/components/Form'
 import FormFields from 'grommet/components/FormFields'
 import FormField from 'grommet/components/FormField'
-import List from 'grommet/components/List'
-import ListItem from 'grommet/components/ListItem'
-import Markdown from 'grommet/components/Markdown'
 import Header from 'grommet/components/Header'
 import Footer from 'grommet/components/Footer'
 import Button from 'grommet/components/Button'
 import TextInput from 'grommet/components/TextInput'
-import Label from 'grommet/components/Label'
-import Timestamp from 'grommet/components/Timestamp'
+import Select from 'grommet/components/Select'
 
-class PostComments extends Component {
+class Comments extends Component {
 	constructor(props) {
 		super(props)
 
@@ -30,6 +24,7 @@ class PostComments extends Component {
 				author: '',
 				comment: '',
 			},
+			hideEditCommentLayer: true,
 		}
 
 		this._handleOnChange = this._handleOnChange.bind(this)
@@ -66,29 +61,22 @@ class PostComments extends Component {
 	}
 
 	render() {
-		const { comments, voteComment } = this.props
 		const { form } = this.state
 
 		return (
 			<Box margin='medium' pad='medium'>
-				<List>
-					{Object.keys(comments).map(key => (
-						<ListItem key={comments[key].id}
-						          pad={{ horizontal: 'medium' }}>
-							<Box pad='none'>
-								<Markdown content={comments[key].body} />
-								<Label>{`By: ${comments[key].author} - ${moment(comments[key].timestamp).format('DD MMM YYYY')}`}</Label>
-								<Vote voteScore={comments[key].voteScore}
-								      upVote={() => voteComment(comments[key].id, 'upVote')}
-								      downVote={() => voteComment(comments[key].id, 'downVote')} />
-							</Box>
-						</ListItem>
-					))}
-				</List>
+				<Header>
+					<Heading>Comments</Heading>
+				</Header>
+				<Box direction='row'
+				     align='center'
+				     pad={{ between: 'medium' }}
+				     margin={{ bottom: 'small' }}>
+					<span>Sort by:</span>
+					<Select options={['Date', 'Rate']} />
+				</Box>
+				<CommentList />
 				<Form>
-					<Header>
-						<Heading>Comments</Heading>
-					</Header>
 					<FormFields>
 						<FormField label='Author'>
 							<TextInput name='author'
@@ -112,15 +100,13 @@ class PostComments extends Component {
 	}
 }
 
-const mapStateToProps = ({ posts: { post, comments } }) => ({
+const mapStateToProps = ({ posts: { post } }) => ({
 	post,
-	comments,
 })
 
 const mapDispatchToProps = dispatch => ({
 	fetchPostComments: key => dispatch(fetchPostComments(key)),
-	newComment: (comment, author, postId) => dispatch(newComment(comment, author, postId)),
-	voteComment: (key, vote) => dispatch(voteComment(key, vote)),
+	newComment: (comment, author, postId) => dispatch(submitComment(undefined, comment, author, postId)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostComments)
+export default connect(mapStateToProps, mapDispatchToProps)(Comments)

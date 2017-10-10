@@ -45,15 +45,19 @@ export const votePost = (key, vote) => dispatch => {
 }
 
 export const FETCH_POST_COMMENTS = 'FETCH_POST_COMMENTS'
-export const POST_COMMENT = 'POST_COMMENT'
+export const SUBMIT_COMMENT = 'SUBMIT_COMMENT'
 export const VOTE_COMMENT = 'VOTE_COMMENT'
 
 export const fetchPostComments = key => dispatch => {
 	Api.fetchPostComments(key).then(data => dispatch({ type: FETCH_POST_COMMENTS, comments: data }))
 }
 
-export const newComment = (comment, author, postId) => dispatch => {
-	Api.newComment(comment, author, postId).then(data => dispatch({ type: POST_COMMENT, comment: data }))
+export const submitComment = (commentId, comment, author, postId) => dispatch => {
+	if (commentId) {
+		Api.editComment(commentId, comment).then(data => dispatch({ type: SUBMIT_COMMENT, comment: data }))
+	} else {
+		Api.newComment(comment, author, postId).then(data => dispatch({ type: SUBMIT_COMMENT, comment: data }))
+	}
 }
 
 export const voteComment = (key, vote) => dispatch => {

@@ -1,7 +1,7 @@
 @import '~grommet/scss/vanilla/index';
 
-.table-style {
-  thead {
-    border-bottom: 1px solid #501eb4;
-  }
+.grommetux-card {
+	&.full {
+		width: 100%;
+	}
 }

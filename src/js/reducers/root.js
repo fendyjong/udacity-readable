@@ -3,7 +3,7 @@ import {
 	FETCH_CATEGORIES,
 	POST_SORT_LIST,
 	FETCH_POST_DETAIL, FETCH_POSTS, VOTE_POST, SUBMIT_POST,
-	FETCH_POST_COMMENTS, POST_COMMENT, VOTE_COMMENT,
+	FETCH_POST_COMMENTS, SUBMIT_COMMENT, VOTE_COMMENT,
 } from '../actions/index'
 
 const initialCategories = {
@@ -99,8 +99,17 @@ function posts(state = initialPosts, action) {
 				...state,
 				comments: [...action.comments],
 			}
-		case POST_COMMENT:
-			comments.push(action.comment)
+		case SUBMIT_COMMENT:
+			if (comments.filter(z => z.id === action.comment.id).length > 0) {
+				comments = comments.map(z => {
+					if (z.id === action.comment.id) {
+						return action.comment
+					}
+					return z
+				})
+			} else {
+				comments.push(action.comment)
+			}
 
 			return {
 				...state,
