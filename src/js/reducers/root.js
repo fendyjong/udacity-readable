@@ -40,7 +40,7 @@ function categories(state = initialCategories, action) {
  * @type {{sortAscending: boolean, sortIndex: number, list: Array, post: {id: string, timestamp: string, title: string, body: string, author: string, category: string, voteScore: string, deleted: boolean}, comments: Array}}
  */
 const initialPosts = {
-	sortAscending: true,
+	sortAscending: false,
 	sortIndex: 3,
 	list: [],
 	post: {
@@ -74,33 +74,33 @@ function posts(state = initialPosts, action) {
 				case 0:
 					// Date
 					if (sortAscending) {
-						list = [...state.list.sort((a, b) => a.timestamp < b.timeStamp)]
-					} else {
 						list = [...state.list.sort((a, b) => a.timestamp > b.timeStamp)]
+					} else {
+						list = [...state.list.sort((a, b) => a.timestamp < b.timeStamp)]
 					}
 					break
 				case 1:
 					// Title
 					if (sortAscending) {
-						list = [...state.list.sort((a, b) => a.title < b.title)]
-					} else {
 						list = [...state.list.sort((a, b) => a.title > b.title)]
+					} else {
+						list = [...state.list.sort((a, b) => a.title < b.title)]
 					}
 					break
 				case 2:
 					// Author
 					if (sortAscending) {
-						list = [...state.list.sort((a, b) => a.author < b.author)]
-					} else {
 						list = [...state.list.sort((a, b) => a.author > b.author)]
+					} else {
+						list = [...state.list.sort((a, b) => a.author < b.author)]
 					}
 					break
 				default:
 					// Vote
 					if (sortAscending) {
-						list = [...state.list.sort((a, b) => a.voteScore < b.voteScore)]
-					} else {
 						list = [...state.list.sort((a, b) => a.voteScore > b.voteScore)]
+					} else {
+						list = [...state.list.sort((a, b) => a.voteScore < b.voteScore)]
 					}
 			}
 

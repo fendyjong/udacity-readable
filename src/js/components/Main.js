@@ -63,7 +63,7 @@ class Main extends Component {
 					<Box>
 						<Switch>
 							<Redirect exact from='/' to='/posts/all' />
-							<Route path='/post/form' component={PostForm} />
+							<Route path='/post/form/:postId?' component={PostForm} />
 							<Route path='/posts/:category' component={Posts} />
 							<Route path='/post/:key' component={PostDetail} />
 						</Switch>

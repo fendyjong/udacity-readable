@@ -17,116 +17,150 @@ import Select from 'grommet/components/Select'
  * Post form component
  */
 class PostForm extends Component {
-	constructor(props) {
-		super(props)
+  constructor(props) {
+    super(props)
 
-		// Initialize state
-		this.state = {
-			postId: undefined,
-			author: '',
-			title: '',
-			category: '',
-			content: '',
-			disabled: {
-				author: '',
-				category: '',
-			},
-		}
+    // Initialize state
+    this.state = {
+      postId: undefined,
+      author: '',
+      title: '',
+      category: '',
+      content: '',
+      disabled: {
+        author: '',
+        category: '',
+      },
+    }
 
-		this.handleOnChange = this.handleOnChange.bind(this)
-		this.handleOnSubmit = this.handleOnSubmit.bind(this)
-	}
+    this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleOnSubmit = this.handleOnSubmit.bind(this)
+  }
 
-	/**
-	 * Handle on change form state
-	 *
-	 * @param event
-	 */
-	handleOnChange(event) {
-		const target = event.target
-		const name = target.name
-		let value
-		if (event.option) {
-			value = event.option.value
-		} else {
-			value = target.value
-		}
+  componentWillMount() {
+    const { match: { params }, post } = this.props
 
-		this.setState({
-			...this.state,
-			[name]: value,
-		})
-	}
+    if (params.postId === post.id) {
+      this._setForm(post.id, post.author, post.title, post.category, post.body)
+    }
+  }
 
-	/**
-	 * Handle submit form
-	 *
-	 * @param event
-	 */
-	handleOnSubmit(event) {
-		const { submitPost } = this.props
-		const { postId, author, title, category, content } = this.state
+  componentWillReceiveProps(nextProps) {
+    const { match: { params }, post } = nextProps
 
-		event.preventDefault()
+    if (params.postId !== '' && post.id === '') {
+      this.props.fetchPost(params.postId)
+    }
 
-		submitPost(postId, title, content, author, category)
-	}
+    if (params.postId !== this.props.post.id) {
+      this._setForm(post.id, post.author, post.title, post.category, post.body)
+    }
+  }
 
-	render() {
-		const { categories } = this.props
-		const { author, title, category, content, disabled } = this.state
+  _setForm(postId, author, title, category, content) {
+    this.setState({
+      postId,
+      author,
+      title,
+      category,
+      content,
+      disabled: {
+        author: 'disabled',
+        category: 'disabled',
+      },
+    })
+  }
 
-		return (
-			<Form pad='medium'>
-				<Header>
-					<Heading>Edit Post</Heading>
-				</Header>
-				<FormFields>
-					<FormField label='Title'>
-						<TextInput value={title}
-						           name='title'
-						           onDOMChange={this.handleOnChange} />
-					</FormField>
-					<FormField label='Author'>
-						<TextInput value={author}
-						           name='author'
-						           onDOMChange={this.handleOnChange}
-						           disabled={disabled.author} />
-					</FormField>
-					<FormField label='Category'>
-						<Select value={category}
-						        name='category'
-						        options={Object.values(categories).map(z => {
-							        return { value: z.path, label: z.name }
-						        })}
-						        onChange={this.handleOnChange} />
-					</FormField>
-					<FormField label='Content'>
+  /**
+   * Handle on change form state
+   *
+   * @param event
+   */
+  handleOnChange(event) {
+    const target = event.target
+    const name = target.name
+    let value
+    if (event.option) {
+      value = event.option.value
+    } else {
+      value = target.value
+    }
+
+    this.setState({
+      ...this.state,
+      [name]: value,
+    })
+  }
+
+  /**
+   * Handle submit form
+   *
+   * @param event
+   */
+  handleOnSubmit(event) {
+    const { submitPost } = this.props
+    const { postId, author, title, category, content } = this.state
+
+    event.preventDefault()
+
+    submitPost(postId, title, content, author, category)
+  }
+
+  render() {
+    const { categories } = this.props
+    const { author, title, category, content, disabled } = this.state
+
+    return (
+      <Form pad='medium'>
+        <Header>
+          <Heading>Edit Post</Heading>
+        </Header>
+        <FormFields>
+          <FormField label='Title'>
+            <TextInput value={title}
+                       name='title'
+                       onDOMChange={this.handleOnChange} />
+          </FormField>
+          <FormField label='Author'>
+            <TextInput value={author}
+                       name='author'
+                       onDOMChange={this.handleOnChange}
+                       disabled={disabled.author} />
+          </FormField>
+          <FormField label='Category'>
+            <Select value={category}
+                    name='category'
+                    options={Object.values(categories).map(z => {
+                      return { value: z.path, label: z.name }
+                    })}
+                    onChange={this.handleOnChange} />
+          </FormField>
+          <FormField label='Content'>
 						<textarea rows='5'
-						          value={content}
-						          name='content'
-						          onChange={this.handleOnChange} />
-					</FormField>
-				</FormFields>
-				<Footer pad={{ vertical: 'medium' }}>
-					<Button label='Save'
-					        path='/posts/all'
-					        onClick={this.handleOnSubmit} />
-				</Footer>
-			</Form>
-		)
-	}
+                      value={content}
+                      name='content'
+                      onChange={this.handleOnChange} />
+          </FormField>
+        </FormFields>
+        <Footer pad={{ vertical: 'medium' }}>
+          <Button label='Save'
+                  path='/posts/all'
+                  onClick={this.handleOnSubmit} />
+        </Footer>
+      </Form>
+    )
+  }
 
 }
 
 const mapStateToProps = ({ categories, posts: { post } }) => ({
-	categories,
-	post,
+  categories,
+  post,
 })
 
 const mapDispatchToProps = dispatch => ({
-	fetchPost: postId => dispatch(fetchPost(postId)),
-	submitPost: (postId, title, body, author, category) => dispatch(submitPost(postId, title, body, author, category)),
+  fetchPost: postId => dispatch(fetchPost(postId)),
+  submitPost: (postId, title, body, author, category) => dispatch(submitPost(postId, title, body, author, category)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostForm)
