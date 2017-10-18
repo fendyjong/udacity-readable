@@ -56,7 +56,11 @@
     "max-len": 0,
     "no-tabs": 0,
     "arrow-parens": "off",
-    "no-mixed-spaces-and-tabs": "off"
+    "no-mixed-spaces-and-tabs": "off",
+    "arrow-body-style": 0,
+    "jsx-a11y/href-no-hash": "off",
+    "no-case-declarations": "off",
+    "class-methods-use-this": "off"
 
     /*
     "no-use-before-define": 0,

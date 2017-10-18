@@ -72,14 +72,6 @@ function posts(state = initialPosts, action) {
 			const sortAscending = !state.sortAscending
 			switch (action.sortIndex) {
 				case 0:
-					// Date
-					if (sortAscending) {
-						list = [...state.list.sort((a, b) => a.timestamp > b.timeStamp)]
-					} else {
-						list = [...state.list.sort((a, b) => a.timestamp < b.timeStamp)]
-					}
-					break
-				case 1:
 					// Title
 					if (sortAscending) {
 						list = [...state.list.sort((a, b) => a.title > b.title)]
@@ -87,8 +79,16 @@ function posts(state = initialPosts, action) {
 						list = [...state.list.sort((a, b) => a.title < b.title)]
 					}
 					break
-				case 2:
+				case 1:
 					// Author
+					if (sortAscending) {
+						list = [...state.list.sort((a, b) => a.author > b.author)]
+					} else {
+						list = [...state.list.sort((a, b) => a.author < b.author)]
+					}
+					break
+				case 2:
+					// No of Comments
 					if (sortAscending) {
 						list = [...state.list.sort((a, b) => a.author > b.author)]
 					} else {
@@ -119,17 +119,38 @@ function posts(state = initialPosts, action) {
 			}
 		case FETCH_POST_DETAIL:
 		case SUBMIT_POST:
-		case VOTE_POST:
 			return {
 				...state,
+				post: { ...action.post },
+			}
+		case VOTE_POST:
+			// update list voteScore
+			list = state.list.map(z => {
+				if (z.id === action.post.id) {
+					z.voteScore = action.post.voteScore
+				}
+				return z
+			})
+
+			return {
+				...state,
+				list,
 				post: { ...action.post },
 			}
 		case FETCH_POST_COMMENTS:
 			comments = [...action.comments]
 			comments = comments.sort((a, b) => a.voteScore < b.voteScore)
 
+			list = state.list.map(post => {
+				if (post.id === action.postId) {
+					post.noOfComments = comments.length
+				}
+				return post
+			})
+
 			return {
 				...state,
+				list,
 				comments: [...comments],
 			}
 		case SUBMIT_COMMENT:

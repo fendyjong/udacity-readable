@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import Moment from 'react-moment'
 
-import { fetchPost, votePost, deletePost } from '../actions'
+import * as actions from '../actions'
 import Comments from './comments/Comments'
 import Vote from './Vote'
 
@@ -41,6 +41,10 @@ class PostDetail extends Component {
 
 		if (location !== this.props.location) {
 			this._fetchPostDetail(params.key)
+		}
+
+		if (nextProps.post.title === undefined) {
+			nextProps.history.push('/page-not-found')
 		}
 	}
 
@@ -94,10 +98,4 @@ const mapStateToProps = ({ posts: { post } }) => ({
 	post,
 })
 
-const mapDispatchToProps = dispatch => ({
-	fetchPost: key => dispatch(fetchPost(key)),
-	votePost: (key, vote) => dispatch(votePost(key, vote)),
-	deletePost: postId => dispatch(deletePost(postId)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(PostDetail)
+export default connect(mapStateToProps, actions)(PostDetail)

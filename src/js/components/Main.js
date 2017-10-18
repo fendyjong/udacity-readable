@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Switch, Route, Redirect, BrowserRouter as Router } from 'react-router-dom'
-import { fetchCategories } from '../actions/index'
+import * as actions from '../actions'
 
 import shortid from 'shortid'
 
 import Posts from './Posts'
 import PostDetail from './PostDetail'
 import PostForm from './PostForm'
+import PageNotFound from './PageNotFound'
 
 import Split from 'grommet/components/Split'
 import Sidebar from 'grommet/components/Sidebar'
@@ -26,7 +27,7 @@ class Main extends Component {
 	 * Fetch categories
 	 */
 	componentDidMount() {
-		this.props.receiveCategories()
+		this.props.fetchCategories()
 	}
 
 	render() {
@@ -66,6 +67,7 @@ class Main extends Component {
 							<Route path='/post/form/:postId?' component={PostForm} />
 							<Route path='/posts/:category' component={Posts} />
 							<Route path='/post/:key' component={PostDetail} />
+							<Route path='/page-not-found' component={PageNotFound} />
 						</Switch>
 					</Box>
 				</Split>
@@ -78,8 +80,5 @@ const mapStateToProps = ({ categories }) => ({
 	categories,
 })
 
-const mapDispatchToProps = dispatch => ({
-	receiveCategories: () => dispatch(fetchCategories()),
-})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main)
+export default connect(mapStateToProps, actions)(Main)

@@ -43,7 +43,7 @@ export const VOTE_POST = 'VOTE_POST'
  * @param category
  */
 export const fetchPosts = (category = '') => (dispatch) => {
-	Api.fetchPosts(category).then(data => dispatch({ type: FETCH_POSTS, posts: data }))
+	Api.fetchPosts(category).then(posts => dispatch({ type: FETCH_POSTS, posts }))
 }
 
 /**
@@ -102,7 +102,7 @@ export const SORT_COMMENTS = 'SORT_COMMENTS'
  * @param key
  */
 export const fetchPostComments = key => dispatch => {
-	Api.fetchPostComments(key).then(data => dispatch({ type: FETCH_POST_COMMENTS, comments: data }))
+	Api.fetchPostComments(key).then(data => dispatch({ type: FETCH_POST_COMMENTS, comments: data, postId: key }))
 }
 
 /**
