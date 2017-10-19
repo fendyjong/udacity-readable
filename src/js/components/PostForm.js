@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import * as actions from '../actions/index'
+import { fetchPost, submitPost } from '../actions/post'
 
 import Form from 'grommet/components/Form'
 import FormFields from 'grommet/components/FormFields'
@@ -167,4 +167,4 @@ const mapStateToProps = ({ categories, posts: { post } }) => ({
 	post,
 })
 
-export default connect(mapStateToProps, actions)(PostForm)
+export default connect(mapStateToProps, { fetchPost, submitPost })(PostForm)

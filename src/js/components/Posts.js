@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import shortid from 'shortid'
 
-import * as actions from '../actions'
+import { fetchPostComments } from '../actions/comment'
+import { fetchPosts, deletePost, votePost, postSortList } from '../actions/post'
 import Vote from './Vote'
 
 import Article from 'grommet/components/Article'
@@ -38,15 +39,10 @@ class Posts extends Component {
 	 * @param nextProps
 	 */
 	componentWillReceiveProps(nextProps) {
-		const { location, match: { params }, list, comments, fetchPostComments } = nextProps
+		const { location, match: { params } } = nextProps
 
 		if (location !== this.props.location) {
 			this._receivePosts(params.category)
-		}
-
-		if (list !== this.props.list) {
-			// get no of comments
-			list.map(post => fetchPostComments(post.id))
 		}
 	}
 
@@ -118,4 +114,12 @@ const mapStateToProps = ({ posts: { list, comments, sortAscending, sortIndex } }
 	sortIndex,
 })
 
-export default connect(mapStateToProps, actions)(Posts)
+export default connect(
+	mapStateToProps,
+	{
+		fetchPosts,
+		deletePost,
+		votePost,
+		postSortList,
+		fetchPostComments,
+	})(Posts)

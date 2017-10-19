@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { submitComment } from '../../actions/index'
+import { submitComment } from '../../actions/comment'
 import CommentList from './CommentList'
 
 import Box from 'grommet/components/Box'

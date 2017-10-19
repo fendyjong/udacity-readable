@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import Moment from 'react-moment'
 
-import * as actions from '../actions'
+import { fetchPost, votePost, deletePost } from '../actions/post'
 import Comments from './comments/Comments'
 import Vote from './Vote'
 
@@ -98,4 +98,4 @@ const mapStateToProps = ({ posts: { post } }) => ({
 	post,
 })
 
-export default connect(mapStateToProps, actions)(PostDetail)
+export default connect(mapStateToProps, { fetchPost, votePost, deletePost })(PostDetail)

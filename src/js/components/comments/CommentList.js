@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import moment from 'moment'
 
-import { fetchPostComments, submitComment, voteComment, sortComments, deleteComment } from '../../actions/index'
+import { fetchPostComments, submitComment, voteComment, sortComments, deleteComment } from '../../actions/comment'
 import Vote from '../Vote'
 
 import Card from 'grommet/components/Card'

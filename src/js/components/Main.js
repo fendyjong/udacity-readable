@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Switch, Route, Redirect, BrowserRouter as Router } from 'react-router-dom'
-import * as actions from '../actions'
+import { fetchCategories } from '../actions/category'
 
 import shortid from 'shortid'
 
@@ -81,4 +81,4 @@ const mapStateToProps = ({ categories }) => ({
 })
 
 
-export default connect(mapStateToProps, actions)(Main)
+export default connect(mapStateToProps, { fetchCategories })(Main)
