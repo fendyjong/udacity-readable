@@ -1,20 +1,20 @@
-# udacity-readable-client
+# udacity-readable
 
 #### This is a Udacity Readable Project from Udacity React Nanodegree.
 
 To run this application, execute the following commands:
 
-1. Install NPM modules
+1. Run API Server:
 ```
+$ cd api-server
+$ npm install
+$ node server
+```
+2. Run Frontend Server:
+```
+$ cd frontend
 $ npm install (or yarn install)
-```
-2. Start the dev server:
-```
 $ npm start (or yarn start)
-```
-3. Test and run linters:
-```
-$ npm test
 ```
 
 ## Contribution
